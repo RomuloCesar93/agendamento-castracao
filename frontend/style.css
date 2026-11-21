@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: darksalmon;
+}
+
+.container {
+    width: 450px;
+    padding: 25px;
+    background-color: bisque;
+    border-radius: 12px;
+    box-shadow: 0 12px 20px rgba(0,0,0,0.3);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    padding: 10px;
+    border-radius: 8px;
+}
+
+button {
+    padding: 10px;
+    border-radius: 12px;
+}
+select {
+    padding: 12px;
+    border-radius: 10px;
+}

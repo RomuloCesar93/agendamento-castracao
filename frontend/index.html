@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Animais</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Cadastro de animais</h1>
+      <form>
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome" />
+        <label for="especie">Especie:</label>
+        <select id="especie">
+          <option value="">Selecione a especie:</option>
+          <option value="cachorro">Cachorro</option>
+          <option value="gato">Gato</option>
+          <option value="outro">Outro</option>
+        </select>
+        <label for="idade">Idade:</label>
+        <input
+          type="number"
+          name="idade"
+          id="idade"
+          min="0"
+          max="130"
+          placeholder="Digite a idade"
+        />
+        <label for="nometutor"> Nome do Tutor:</label>
+        <input
+          type="text"
+          name="nometutor"
+          id="nometutor"
+          placeholder="Digite o nome do tutor"
+        />
+        <button type="submit">Cadastrar</button>
+      </form>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
