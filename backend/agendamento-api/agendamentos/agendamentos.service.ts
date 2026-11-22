@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CriarAgendamentoDto } from './dto/criar-agendamento.dto';
 import { AtualizarAgendamentoDto } from './dto/atualizar-agendamento.dto';
-
+import { NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Agendamentos } from './agendamento.entity';
 @Injectable()
 export class AgendamentosService {
+  constructor(
+    @InjectRepository(Agendamentos)
+    private agendamentoRepository: Repository<Agendamentos>,
+  ) {}
   private agendamentos = [
     {
       id: 1,
@@ -22,52 +29,46 @@ export class AgendamentosService {
   ];
 
   listar() {
-    return this.agendamentos;
+    return this.agendamentoRepository.find();
   }
-  buscar(id: string) {
-    return this.agendamentos.find(
-      (agendamento) => agendamento.id === Number(id),
-    );
+  async buscar(id: string) {
+    const busca = await this.agendamentoRepository.findOneBy({
+      id: Number(id),
+    });
+
+    if (!busca) {
+      throw new NotFoundException('Agendamento não encontrado');
+    }
+
+    return busca;
   }
   criar(dados: CriarAgendamentoDto) {
-    const novoRegistro = {
-      id: this.agendamentos.length + 1,
-      ...dados,
-    };
-
-    this.agendamentos.push(novoRegistro);
-
-    return novoRegistro;
+    return this.agendamentoRepository.save(dados);
   }
 
-  atualizar(id: string, dados: AtualizarAgendamentoDto) {
-    const registro = this.agendamentos.find(
-      (agendamento) => agendamento.id === Number(id),
-    );
+  async atualizar(id: string, dados: AtualizarAgendamentoDto) {
+    const registro = await this.agendamentoRepository.preload({
+      id: Number(id),
+      ...dados,
+    });
 
     if (!registro) {
-      throw new Error('Registro não encontrado');
+      throw new NotFoundException('Registro não encontrado');
     }
 
-    Object.assign(registro, dados);
+    return this.agendamentoRepository.save(registro);
+  }
+  async deletar(id: string) {
+    const registro = await this.agendamentoRepository.findOneBy({
+      id: Number(id),
+    });
+
+    if (!registro) {
+      throw new NotFoundException('Agendamento não encontrado');
+    }
+
+    await this.agendamentoRepository.remove(registro);
 
     return registro;
-  }
-  deletar(id: string) {
-    const novoRegistroo = this.agendamentos.find(
-      (agendamento) => agendamento.id == Number(id),
-    );
-
-    if (!novoRegistroo) {
-      throw new Error('Registro não encontrado');
-    }
-
-    const apagar = this.agendamentos.filter(
-      (agendamento) => agendamento.id !== Number(id),
-    );
-
-    this.agendamentos = apagar;
-
-    return novoRegistroo;
   }
 }
